@@ -43,6 +43,32 @@ describe('require-image-dimensions', () => {
     );
   });
 
+  it(`finds errors in block settings`, () => {
+    const testCase = JSON.stringify({
+      name: 'Image picker in block settings',
+      blocks: [
+        {
+          name: 'Image',
+          type: 'image',
+          settings: [
+            {
+              type: 'image_picker',
+              id: 'image',
+              label: 'Image',
+            },
+          ],
+        },
+      ],
+    });
+    const result = requireImageDimensions(testCase);
+
+    expect(result).toHaveLength(1);
+    expect(result[0]).toHaveProperty(
+      'message',
+      'Image Picker must contain an "info" property',
+    );
+  });
+
   it(`doesn't error if valid info is found`, () => {
     const testCase = JSON.stringify({
       name: 'With recommmended size',

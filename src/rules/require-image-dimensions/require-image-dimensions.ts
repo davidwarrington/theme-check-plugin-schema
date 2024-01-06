@@ -18,7 +18,7 @@ export function requireImageDimensions(schema: string) {
         return;
       }
 
-      const infoNode = getInfoNode(node);
+      const infoNode = node.children.find(child => child.key.value === 'info');
 
       if (!infoNode) {
         errors.push({
@@ -46,17 +46,7 @@ export function requireImageDimensions(schema: string) {
 }
 
 function getIsImagePicker(node: ObjectNode) {
-  let typeNode: PropertyNode | undefined;
-
-  walk(node, {
-    Property(node) {
-      if (node.key.value !== 'type') {
-        return;
-      }
-
-      typeNode = node;
-    },
-  });
+  const typeNode = node.children.find(child => child.key.value === 'type');
 
   if (!typeNode) {
     return false;
@@ -65,22 +55,6 @@ function getIsImagePicker(node: ObjectNode) {
   return (
     typeNode.value.type === 'Literal' && typeNode.value.value === 'image_picker'
   );
-}
-
-function getInfoNode(node: ObjectNode) {
-  let infoNode: PropertyNode | undefined;
-
-  walk(node, {
-    Property(node) {
-      if (node.key.value !== 'info') {
-        return;
-      }
-
-      infoNode = node;
-    },
-  });
-
-  return infoNode;
 }
 
 function validateInfoNode(node: PropertyNode, pattern: RegExp) {
