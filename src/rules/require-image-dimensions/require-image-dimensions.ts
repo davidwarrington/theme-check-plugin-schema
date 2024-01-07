@@ -38,9 +38,9 @@ export function requireImageDimensions({
         return;
       }
 
-      const isvalid = validateInfoNode(infoNode, infoPattern);
+      const isValid = validateInfoNode(infoNode, infoPattern);
 
-      if (isvalid) {
+      if (isValid) {
         return;
       }
 

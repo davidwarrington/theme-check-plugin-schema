@@ -17,11 +17,15 @@
     "@commitlint/types": "^18.4.4",
     "@davidwarrington/commitlint-config": "^2.0.0",
     "@davidwarrington/prettier-config": "^2.0.0",
+    "@shopify/theme-check-common": "^1.22.0",
+    "@shopify/theme-check-node": "^1.22.0",
     "@tsconfig/node21": "^21.0.1",
     "@types/json-to-ast": "^2.1.4",
     "husky": "^8.0.3",
     "prettier": "^3.1.1",
+    "tsup": "^8.0.1",
     "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
     "vitest": "^1.1.3"
   }
 }

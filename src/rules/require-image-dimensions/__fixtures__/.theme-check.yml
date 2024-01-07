@@ -1,0 +1,9 @@
+root: .
+
+require:
+  - ../dist/index.cjs
+
+RequireImageDimensions:
+  enabled: true
+  severity: error
+  pattern: 'Recommended Size: [\d]+px x [\d]+px'
