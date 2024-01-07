@@ -6,4 +6,3 @@ require:
 RequireImageDimensions:
   enabled: true
   severity: error
-  pattern: 'Recommended Size: [\d]+px x [\d]+px'
