@@ -22,7 +22,7 @@ export const RequireImageDimensions: LiquidCheckDefinition = {
     type: SourceCodeType.LiquidHtml,
     severity: Severity.ERROR,
     schema: {
-      pattern: SchemaProp.string(String(DEFAULT_INFO_PATTERN)).optional(),
+      pattern: SchemaProp.string(DEFAULT_INFO_PATTERN.source).optional(),
     },
     targets: [],
   },
