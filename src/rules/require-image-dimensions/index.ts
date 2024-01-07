@@ -1,4 +1,5 @@
 import {
+  type JSONCheckDefinition,
   type LiquidCheckDefinition,
   SchemaProp,
   Severity,
@@ -9,9 +10,61 @@ import {
   requireImageDimensions,
 } from './require-image-dimensions';
 
-export const RequireImageDimensions: LiquidCheckDefinition = {
+export const RequireImageDimensionsJson: JSONCheckDefinition = {
   meta: {
-    code: 'RequireImageDimensions',
+    code: 'RequireImageDimensionsJson',
+    name: 'Require image dimensions with image pickers',
+    docs: {
+      description:
+        'This check enforces that an info property is included with image pickers, and that it includes recommended dimensions',
+      recommended: true,
+      url: 'https://github.com/davidwarrington/theme-check-schema-plugin/src/rules/require-image-dimensions/README.md',
+    },
+    type: SourceCodeType.JSON,
+    severity: Severity.ERROR,
+    schema: {
+      pattern: SchemaProp.string(DEFAULT_INFO_PATTERN.source).optional(),
+    },
+    targets: [],
+  },
+
+  create(context) {
+    return {
+      async onCodePathStart(file) {
+        const errors = requireImageDimensions({
+          infoPattern: new RegExp(context.settings.pattern),
+          schema: file.source,
+        });
+
+        errors.map(error => {
+          const { startIndex, endIndex } = (() => {
+            if (!error.node.loc) {
+              return {
+                startIndex: 0,
+                endIndex: file.source.length,
+              };
+            }
+
+            return {
+              startIndex: error.node.loc.start.offset,
+              endIndex: error.node.loc.end.offset,
+            };
+          })();
+
+          context.report({
+            message: error.message,
+            startIndex,
+            endIndex,
+          });
+        });
+      },
+    };
+  },
+};
+
+export const RequireImageDimensionsLiquid: LiquidCheckDefinition = {
+  meta: {
+    code: 'RequireImageDimensionsLiquid',
     name: 'Require image dimensions with image pickers',
     docs: {
       description:
@@ -69,4 +122,7 @@ export const RequireImageDimensions: LiquidCheckDefinition = {
   },
 };
 
-export const checks = [RequireImageDimensions];
+export const checks = [
+  RequireImageDimensionsJson,
+  RequireImageDimensionsLiquid,
+];
