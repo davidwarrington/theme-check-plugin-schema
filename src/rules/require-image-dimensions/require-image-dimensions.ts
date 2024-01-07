@@ -1,8 +1,17 @@
 import parse, { type ObjectNode, type PropertyNode } from 'json-to-ast';
 import { walk } from '../../utils/walk';
 
-export function requireImageDimensions(schema: string) {
-  const infoPattern = /Recommended Size: [\d]+px x [\d]+px/;
+interface RequireImageDimensionsOptions {
+  infoPattern?: RegExp;
+  schema: string;
+}
+
+export const DEFAULT_INFO_PATTERN = /Recommended Size: [\d]+px x [\d]+px/;
+
+export function requireImageDimensions({
+  infoPattern = DEFAULT_INFO_PATTERN,
+  schema,
+}: RequireImageDimensionsOptions) {
   const ast = parse(schema, { loc: true });
 
   const errors: {

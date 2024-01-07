@@ -13,7 +13,7 @@ describe('require-image-dimensions', () => {
         },
       ],
     });
-    const result = requireImageDimensions(testCase);
+    const result = requireImageDimensions({ schema: testCase });
 
     expect(result).toHaveLength(1);
     expect(result[0]).toHaveProperty(
@@ -34,7 +34,7 @@ describe('require-image-dimensions', () => {
         },
       ],
     });
-    const result = requireImageDimensions(testCase);
+    const result = requireImageDimensions({ schema: testCase });
 
     expect(result).toHaveLength(1);
     expect(result[0]).toHaveProperty(
@@ -60,7 +60,7 @@ describe('require-image-dimensions', () => {
         },
       ],
     });
-    const result = requireImageDimensions(testCase);
+    const result = requireImageDimensions({ schema: testCase });
 
     expect(result).toHaveLength(1);
     expect(result[0]).toHaveProperty(
@@ -81,7 +81,7 @@ describe('require-image-dimensions', () => {
         },
       ],
     });
-    const result = requireImageDimensions(testCase);
+    const result = requireImageDimensions({ schema: testCase });
 
     expect(result).toStrictEqual([]);
   });
@@ -97,7 +97,27 @@ describe('require-image-dimensions', () => {
         },
       ],
     });
-    const result = requireImageDimensions(testCase);
+    const result = requireImageDimensions({ schema: testCase });
+
+    expect(result).toStrictEqual([]);
+  });
+
+  it('supports custom info pattern', () => {
+    const testCase = JSON.stringify({
+      name: 'Custom info pattern',
+      settings: [
+        {
+          type: 'image_picker',
+          id: 'image',
+          label: 'Image',
+          info: 'Min Size: 100x100px',
+        },
+      ],
+    });
+    const result = requireImageDimensions({
+      infoPattern: /Min Size: [\d]+x[\d]+px/,
+      schema: testCase,
+    });
 
     expect(result).toStrictEqual([]);
   });
