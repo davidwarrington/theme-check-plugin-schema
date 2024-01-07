@@ -3,6 +3,10 @@ root: .
 require:
   - ../dist/index.cjs
 
-RequireImageDimensions:
+RequireImageDimensionsJson:
+  enabled: true
+  severity: error
+
+RequireImageDimensionsLiquid:
   enabled: true
   severity: error
