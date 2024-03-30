@@ -1,8 +1,12 @@
 root: .
 
 require:
-  - ../dist/index.cjs
+  - ../dist/rules.cjs
 
-RequireImageDimensions:
+Schema/RequireImageDimensions/Json:
+  enabled: true
+  severity: error
+
+Schema/RequireImageDimensions/Liquid:
   enabled: true
   severity: error

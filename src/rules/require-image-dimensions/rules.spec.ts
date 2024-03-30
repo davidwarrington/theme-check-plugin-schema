@@ -9,14 +9,21 @@ async function runCheck() {
   const root = join(__dirname, '__fixtures__');
   const offenses = await check(root, join(root, '.theme-check.yml'));
 
-  function forCase(testCase: string) {
+  function forConfig() {
     return offenses.filter(offense =>
-      offense.absolutePath.endsWith(`/${testCase}.liquid`),
+      offense.absolutePath.endsWith(`/config/settings_schema.json`),
+    );
+  }
+
+  function forSection(filename: string) {
+    return offenses.filter(offense =>
+      offense.absolutePath.endsWith(`/sections/${filename}.liquid`),
     );
   }
 
   return {
-    forCase,
+    forConfig,
+    forSection,
     offenses,
   };
 }
@@ -29,24 +36,22 @@ describe('theme-check/require-image-dimensions', () => {
      * the rule in parallel with vitest.
      */
     await build({
-      entry: [join(__dirname, 'index.ts')],
+      entry: [join(__dirname, 'rules.ts')],
       outDir: join(__dirname, 'dist'),
       format: ['cjs'],
+      silent: true,
     });
   });
 
   it('reports to theme-check correctly', async () => {
-    const { forCase, offenses } = await runCheck();
+    const { forConfig, forSection, offenses } = await runCheck();
 
-    const noInfoPropertyOffenses = forCase('no-info-property');
-    const invalidInfoPropertyOffenses = forCase('invalid-info-property');
-    const validInfoPropertyOffenses = forCase('valid-info-property');
+    expect(offenses).toHaveLength(3);
 
-    expect(offenses).toHaveLength(2);
-
-    expect(noInfoPropertyOffenses).toHaveLength(1);
-    expect(invalidInfoPropertyOffenses).toHaveLength(1);
-    expect(validInfoPropertyOffenses).toHaveLength(0);
+    expect(forConfig()).toHaveLength(1);
+    expect(forSection('no-info-property')).toHaveLength(1);
+    expect(forSection('invalid-info-property')).toHaveLength(1);
+    expect(forSection('valid-info-property')).toHaveLength(0);
   });
 
   it.todo('reports errors in the correct location', () => {});
