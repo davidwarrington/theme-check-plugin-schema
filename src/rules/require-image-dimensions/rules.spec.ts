@@ -39,6 +39,7 @@ describe('theme-check/require-image-dimensions', () => {
       entry: [join(__dirname, 'rules.ts')],
       outDir: join(__dirname, 'dist'),
       format: ['cjs'],
+      silent: true,
     });
   });
 
