@@ -1,9 +1,9 @@
 import {
-  type JSONCheckDefinition,
-  type LiquidCheckDefinition,
   SchemaProp,
   Severity,
   SourceCodeType,
+  type JSONCheckDefinition,
+  type LiquidCheckDefinition,
 } from '@shopify/theme-check-common';
 import {
   DEFAULT_INFO_PATTERN,
@@ -36,7 +36,7 @@ export const RequireImageDimensionsJson: JSONCheckDefinition = {
           schema: file.source,
         });
 
-        errors.map(error => {
+        errors.forEach(error => {
           const { startIndex, endIndex } = (() => {
             if (!error.node.loc) {
               return {
@@ -96,7 +96,7 @@ export const RequireImageDimensionsLiquid: LiquidCheckDefinition = {
           schema: node.body.value,
         });
 
-        errors.map(error => {
+        errors.forEach(error => {
           const { startIndex, endIndex } = (() => {
             if (!error.node.loc) {
               return {

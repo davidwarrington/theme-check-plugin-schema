@@ -36,7 +36,7 @@ describe('theme-check/require-image-dimensions', () => {
      * the rule in parallel with vitest.
      */
     await build({
-      entry: [join(__dirname, 'index.ts')],
+      entry: [join(__dirname, 'rules.ts')],
       outDir: join(__dirname, 'dist'),
       format: ['cjs'],
     });
