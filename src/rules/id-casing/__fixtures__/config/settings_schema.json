@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Gift With Purchase",
+    "settings": [
+      {
+        "type": "product",
+        "id": "giftProduct",
+        "label": "Gift Product"
+      }
+    ]
+  }
+]
