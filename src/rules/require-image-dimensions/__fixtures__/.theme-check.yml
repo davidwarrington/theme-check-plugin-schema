@@ -3,10 +3,10 @@ root: .
 require:
   - ../dist/rules.cjs
 
-RequireImageDimensionsJson:
+Schema/RequireImageDimensions/Json:
   enabled: true
   severity: error
 
-RequireImageDimensionsLiquid:
+Schema/RequireImageDimensions/Liquid:
   enabled: true
   severity: error

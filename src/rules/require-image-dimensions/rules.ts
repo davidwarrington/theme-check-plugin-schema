@@ -12,7 +12,7 @@ import {
 
 export const RequireImageDimensionsJson: JSONCheckDefinition = {
   meta: {
-    code: 'RequireImageDimensionsJson',
+    code: 'Schema/RequireImageDimensions/Json',
     name: 'Require image dimensions with image pickers',
     docs: {
       description:
@@ -64,7 +64,7 @@ export const RequireImageDimensionsJson: JSONCheckDefinition = {
 
 export const RequireImageDimensionsLiquid: LiquidCheckDefinition = {
   meta: {
-    code: 'RequireImageDimensionsLiquid',
+    code: 'Schema/RequireImageDimensions/Liquid',
     name: 'Require image dimensions with image pickers',
     docs: {
       description:
