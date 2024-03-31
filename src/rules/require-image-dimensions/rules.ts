@@ -37,24 +37,14 @@ export const RequireImageDimensionsJson: JSONCheckDefinition = {
         });
 
         errors.forEach(error => {
-          const { startIndex, endIndex } = (() => {
-            if (!error.node.loc) {
-              return {
-                startIndex: 0,
-                endIndex: file.source.length,
-              };
-            }
-
-            return {
-              startIndex: error.node.loc.start.offset,
-              endIndex: error.node.loc.end.offset,
-            };
-          })();
+          const position = {
+            startIndex: error.node.loc?.start.offset ?? 0,
+            endIndex: error.node.loc?.end.offset ?? file.source.length,
+          };
 
           context.report({
             message: error.message,
-            startIndex,
-            endIndex,
+            ...position,
           });
         });
       },
@@ -97,24 +87,17 @@ export const RequireImageDimensionsLiquid: LiquidCheckDefinition = {
         });
 
         errors.forEach(error => {
-          const { startIndex, endIndex } = (() => {
-            if (!error.node.loc) {
-              return {
-                startIndex: node.blockStartPosition.end,
-                endIndex: node.blockEndPosition.start,
-              };
-            }
-
-            return {
-              startIndex: error.node.loc.start.offset,
-              endIndex: error.node.loc.end.offset,
-            };
-          })();
+          const position = {
+            startIndex:
+              node.blockStartPosition.end + (error.node.loc?.start.offset ?? 0),
+            endIndex: error.node.loc
+              ? node.blockStartPosition.end + error.node.loc.end.offset
+              : node.blockEndPosition.start,
+          };
 
           context.report({
             message: error.message,
-            startIndex,
-            endIndex,
+            ...position,
           });
         });
       },

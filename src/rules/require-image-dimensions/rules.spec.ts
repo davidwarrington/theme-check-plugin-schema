@@ -54,5 +54,21 @@ describe('theme-check/require-image-dimensions', () => {
     expect(forSection('valid-info-property')).toHaveLength(0);
   });
 
-  it.todo('reports errors in the correct location', () => {});
+  it('reports errors in the correct location', async () => {
+    const { forConfig, forSection } = await runCheck();
+
+    const configError = forConfig()[0];
+    expect(configError.start.index).toBe(52);
+    expect(configError.end.index).toBe(141);
+
+    const sectionNoInfoPropertyError = forSection('no-info-property')[0];
+    expect(sectionNoInfoPropertyError.start.index).toBe(65);
+    expect(sectionNoInfoPropertyError.end.index).toBe(146);
+
+    const sectionInvalidInfoPropertyError = forSection(
+      'invalid-info-property',
+    )[0];
+    expect(sectionInvalidInfoPropertyError.start.index).toBe(153);
+    expect(sectionInvalidInfoPropertyError.end.index).toBe(175);
+  });
 });
