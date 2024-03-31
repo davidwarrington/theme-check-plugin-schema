@@ -106,8 +106,9 @@ export const RequireImageDimensionsLiquid: LiquidCheckDefinition = {
             }
 
             return {
-              startIndex: error.node.loc.start.offset,
-              endIndex: error.node.loc.end.offset,
+              startIndex:
+                node.blockStartPosition.end + error.node.loc.start.offset,
+              endIndex: node.blockStartPosition.end + error.node.loc.end.offset,
             };
           })();
 
