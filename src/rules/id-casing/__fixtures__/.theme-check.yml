@@ -1,0 +1,12 @@
+root: .
+
+require:
+  - ../dist/rules.cjs
+
+Schema/IDCasing/Json:
+  enabled: true
+  severity: error
+
+Schema/IDCasing/Liquid:
+  enabled: true
+  severity: error
