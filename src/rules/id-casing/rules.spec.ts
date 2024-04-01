@@ -22,11 +22,11 @@ describe('theme-check/id-casing', () => {
     const { forConfig, forSection } = await test.run();
 
     const configError = forConfig()[0];
-    expect(configError.start.index).toBe(95);
-    expect(configError.end.index).toBe(114);
+    expect(configError.start.index).toBe(107);
+    expect(configError.end.index).toBe(120);
 
     const invalidIdError = forSection('invalid-id')[0];
-    expect(invalidIdError.start.index).toBe(93);
-    expect(invalidIdError.end.index).toBe(113);
+    expect(invalidIdError.start.index).toBe(98);
+    expect(invalidIdError.end.index).toBe(111);
   });
 });

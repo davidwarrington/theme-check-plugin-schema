@@ -1,4 +1,8 @@
-import parse, { type PropertyNode } from 'json-to-ast';
+import parse, {
+  type LiteralNode,
+  type PropertyNode,
+  type ValueNode,
+} from 'json-to-ast';
 import snakeCase from 'lodash.snakecase';
 import { walk } from '../../utils/walk';
 
@@ -11,32 +15,46 @@ export function idCasing({ schema }: IdCasingOptions) {
 
   const errors: {
     message: string;
-    node: PropertyNode;
+    node: ValueNode;
   }[] = [];
 
   walk(ast, {
     Property(node) {
-      const isIdProperty = node.key.value === 'id';
+      const isIdProperty = getIsIdProperty(node);
 
       if (!isIdProperty) {
         return;
       }
 
-      // @ts-expect-error
-      const key = node.value.value;
-      const expectedValue = snakeCase(key);
-      const isValid = expectedValue === key;
+      const actualValue = node.value.value;
+      const expectedValue = snakeCase(actualValue);
+      const isValid = expectedValue === actualValue;
 
       if (isValid) {
         return;
       }
 
       errors.push({
-        message: `Expected ID ${JSON.stringify(key)} to be ${JSON.stringify(expectedValue)}`,
-        node,
+        message: `Expected ID ${JSON.stringify(actualValue)} to be ${JSON.stringify(expectedValue)}`,
+        node: node.value,
       });
     },
   });
 
   return errors;
+}
+
+function getIsIdProperty(node: PropertyNode): node is Omit<
+  PropertyNode,
+  'value'
+> & {
+  value: Omit<LiteralNode, 'value'> & {
+    value: string;
+  };
+} {
+  const key = node.key.value;
+  const isString =
+    node.value.type === 'Literal' && typeof node.value.value === 'string';
+
+  return key === 'id' && isString;
 }
