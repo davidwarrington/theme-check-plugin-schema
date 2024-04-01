@@ -27,19 +27,19 @@ The following patterns are considered problems:
 "giftProduct"
 ```
 
-```json
+```jsonc
 // pascal case
 "GiftProduct"
 ```
 
-```json
+```jsonc
 // kebab case
 "gift-product"
 ```
 
 The following patterns are _not_ considered problems:
 
-```json
+```jsonc
 // snake case
 "gift_product"
 ```
