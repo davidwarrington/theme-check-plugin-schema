@@ -1,19 +1,16 @@
 import { join } from 'node:path';
 import { check } from '@shopify/theme-check-node';
 import { build } from 'tsup';
+import { describe, expect, it } from 'vitest';
 
 /** @param location `import.meta.url` */
-export function setupTest(location: string) {
+function setupTest(location: string) {
   const dirname = new URL('.', location).pathname;
 
   return {
     async build() {
-      /**
-       * `console.log` appears to be suppressed whilst this is running.
-       * If you need `console.log`, try running `tsup --watch` to build
-       * the rule in parallel with vitest.
-       */
       await build({
+        clean: true,
         entry: [join(dirname, 'rules.ts')],
         outDir: join(dirname, 'dist'),
         format: ['cjs'],
@@ -23,62 +20,59 @@ export function setupTest(location: string) {
 
     async run() {
       const root = join(dirname, '__fixtures__');
-      const offenses = await check(root, join(root, '.theme-check.yml'));
-
-      function forConfig() {
-        return offenses.filter(offense =>
-          offense.absolutePath.endsWith(`/config/settings_schema.json`),
-        );
-      }
-
-      function forSection(filename: string) {
-        return offenses.filter(offense =>
-          offense.absolutePath.endsWith(`/sections/${filename}.liquid`),
-        );
-      }
-
-      return {
-        forConfig,
-        forSection,
-        offenses,
-      };
+      return check(root, join(root, '.theme-check.yml'));
     },
   };
 }
 
-export async function buildCheck(dirname: string) {
-  /**
-   * `console.log` appears to be suppressed whilst this is running.
-   * If you need `console.log`, try running `tsup --watch` to build
-   * the rule in parallel with vitest.
-   */
-  await build({
-    entry: [join(dirname, 'rules.ts')],
-    outDir: join(dirname, 'dist'),
-    format: ['cjs'],
-    silent: true,
+export function testRule(config: {
+  ruleName: string;
+  /** `import.meta.url` */
+  location: string;
+
+  accept: {
+    description: string;
+    file: string;
+  }[];
+  reject: {
+    description: string;
+    file: string;
+    message: string;
+    startIndex: number;
+    endIndex: number;
+  }[];
+}) {
+  describe(config.ruleName, async () => {
+    const test = setupTest(config.location);
+
+    await test.build();
+    const offenses = await test.run();
+
+    config.accept.forEach(acceptConfig => {
+      const relatedOffenses = offenses.filter(offense =>
+        offense.absolutePath.endsWith(acceptConfig.file),
+      );
+
+      it(acceptConfig.description, () => {
+        expect(relatedOffenses).toHaveLength(0);
+      });
+    });
+
+    config.reject.forEach(rejectConfig => {
+      const relatedOffenses = offenses.filter(offense =>
+        offense.absolutePath.endsWith(rejectConfig.file),
+      );
+
+      it(rejectConfig.description, () => {
+        expect(relatedOffenses).toHaveLength(1);
+
+        relatedOffenses.forEach(offense => {
+          expect(offense.message).toBe(rejectConfig.message);
+
+          expect(offense.start.index).toBe(rejectConfig.startIndex);
+          expect(offense.end.index).toBe(rejectConfig.endIndex);
+        });
+      });
+    });
   });
-}
-
-export async function runCheck(dirname: string) {
-  const root = join(dirname, '__fixtures__');
-  const offenses = await check(root, join(root, '.theme-check.yml'));
-
-  function forConfig() {
-    return offenses.filter(offense =>
-      offense.absolutePath.endsWith(`/config/settings_schema.json`),
-    );
-  }
-
-  function forSection(filename: string) {
-    return offenses.filter(offense =>
-      offense.absolutePath.endsWith(`/sections/${filename}.liquid`),
-    );
-  }
-
-  return {
-    forConfig,
-    forSection,
-    offenses,
-  };
 }
