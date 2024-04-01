@@ -88,6 +88,13 @@ export const IdCasingLiquid: LiquidCheckDefinition = {
           context.report({
             message: error.message,
             ...position,
+            fix(corrector) {
+              corrector.replace(
+                position.startIndex,
+                position.endIndex,
+                error.fix,
+              );
+            },
           });
         });
       },

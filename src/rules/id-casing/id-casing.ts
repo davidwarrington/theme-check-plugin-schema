@@ -14,6 +14,7 @@ export function idCasing({ schema }: IdCasingOptions) {
   const ast = parse(schema, { loc: true });
 
   const errors: {
+    fix: string;
     message: string;
     node: ValueNode;
   }[] = [];
@@ -37,6 +38,7 @@ export function idCasing({ schema }: IdCasingOptions) {
       errors.push({
         message: `Expected ID ${JSON.stringify(actualValue)} to be ${JSON.stringify(expectedValue)}`,
         node: node.value,
+        fix: JSON.stringify(expectedValue),
       });
     },
   });
