@@ -2,4 +2,7 @@
 
 ## Rules
 
-- RequireImageDimensions
+- IDCasing/Json
+- IDCasing/Schema
+- RequireImageDimensions/Json
+- RequireImageDimensions/Schema
